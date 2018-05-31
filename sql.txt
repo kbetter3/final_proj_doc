@@ -1,0 +1,76 @@
+// Genre Table
+create table genre (
+genre varchar2(300) primary key
+);
+
+
+// Artist Sequence
+create sequence artist_seq
+
+// Artist Table
+create table artist (
+no number primary key,
+name varchar2(300) not null,
+member varchar2(300) not null,
+debutDate date not null,
+activityType varchar2(30) not null check(activityType in('솔로', '그룹')),
+agency varchar2(300),
+thumb varchar2(300) unique,
+likeCount number default 0 not null);
+
+
+// Album Sequence
+create sequence album_seq;
+
+// Album Table
+create table album (
+no number primary key,
+name varchar2(300) not null,
+artistNo constraint fk_artist_no_album references artist(no),
+releaseDate date not null,
+genre varchar2(300) constraint fk_genre_name_album references genre(genre),
+agency varchar2(300),
+thumb varchar2(300) unique,
+likeCount number default 0 not null
+);
+
+
+// Music Sequence
+create sequence music_seq;
+
+// Music Table
+create table music (
+no number primary key,
+name varchar(300) not null,
+albumNo constraint fk_album_no_music references album(no),
+lyrics clob,
+releaseDate date not null,
+genre constraint fk_genre_genre_music references genre(genre),
+artistNo constraint fk_artist_no_music references artist(no),
+statement number(1) default 0 check(statement in(0, 1, 2)) not null,
+likeCount number default 0 not null,
+playCount number default 0 not null,
+downCount number default 0 not null,
+thumb varchar2(300) unique
+);
+
+
+// Member Sequence
+create sequence member_seq;
+
+// Member Table
+create table member (
+no number primary key,
+id varchar2(60) not null unique,
+pw varchar2(256) not null,
+pwLoop number(1) not null, 
+email varchar2(4000) not null unique,
+activationKey varchar2(6) not null,
+activationDate date,
+regDate date not null,
+withdrawDate date,
+power number(1) default 0 check(power in(0, 1, 3, 8, 9)) not null,
+expireDate date,
+downCount number default 0 not null,
+loginSession varchar2(900)
+);
